@@ -1,18 +1,10 @@
 function solution(nums) {
-  var answer = 0;
-  const map = new Map();
+  // Set을 사용하여 중복을 제거하고 종류의 수만 파악
+  const uniqueTypes = new Set(nums).size;
+  const targetLen = nums.length / 2;
 
-  for (const n of nums) {
-    map.set(n, (map.get(n) || 0) + 1);
-  }
-  const targetLen = Math.floor(nums.length / 2);
-  const keyLen = map.size;
-  if (targetLen < keyLen) {
-    answer = targetLen;
-  } else {
-    answer = keyLen;
-  }
-  return answer;
+  // 두 값 중 더 작은 값을 반환
+  return Math.min(uniqueTypes, targetLen);
 }
 
 const nums = [];
