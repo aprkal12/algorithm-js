@@ -1,25 +1,30 @@
 function solution(bridge_length, weight, truck_weights) {
-  var answer = 0;
-
-  const curb = [truck_weights.shift()];
+  const startTruck = truck_weights.shift();
+  const curb = [startTruck];
   const times = [0];
   let time = 1;
+  let curWeight = startTruck;
+  let truckIdx = 0;
   while (curb.length > 0) {
     const ti = times[0];
     if (time - ti >= bridge_length) {
+      const passedTruck = curb.shift();
       times.shift();
-      curb.shift();
+      curWeight -= passedTruck;
     }
-    if (truck_weights[0] + curb.reduce((acc, cur) => acc + cur, 0) <= weight) {
-      const truck = truck_weights.shift();
+    if (
+      truck_weights.length > truckIdx &&
+      truck_weights[truckIdx] + curWeight <= weight
+    ) {
+      const truck = truck_weights[truckIdx];
       curb.push(truck);
       times.push(time);
+      curWeight += truck;
+      truckIdx++;
     }
     time++;
   }
-  answer = time;
-
-  return answer;
+  return time;
 }
 
 const blen = [];
