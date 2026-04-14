@@ -4,11 +4,7 @@ function solution(prices) {
   let idx = 0;
   let i = 0;
   while (idx < prices.length) {
-    if (i === prices.length) {
-      answer.push(i - idx - 1);
-      i = idx + 1;
-      idx++;
-    } else if (prices[idx] > prices[i]) {
+    if (prices[idx] > prices[i] || i === prices.length - 1) {
       answer.push(i - idx);
       i = idx + 1;
       idx++;
