@@ -5,16 +5,23 @@ def solution(jobs):
     heap = []
     time = 0 
     times = []
-    pop_list = []
+    pt = 0
 
-    while len(jobs) > len(pop_list) or len(heap) > 0:
-        for i in range(len(jobs)):
-            if jobs[i][0] <= time and not i in pop_list:
-                [jobs[i][0], jobs[i][1]] = [jobs[i][1], jobs[i][0]]
-                hq.heappush(heap, jobs[i])
-                pop_list.append(i)
+    sorted_jobs = sorted(jobs, key=lambda x:x[0])
+    for job in sorted_jobs:
+        [job[0], job[1]] = [job[1], job[0]]
+
+    while len(sorted_jobs) > pt or len(heap) > 0:
+        for i in range(pt, len(sorted_jobs)):
+            if sorted_jobs[i][1] <= time:
+                hq.heappush(heap, sorted_jobs[i])
+                pt = i+1
+            else:
+                break
         if len(heap) < 1:
-            time += 1
+            hq.heappush(heap, sorted_jobs[pt])
+            time = sorted_jobs[pt][1]
+            pt = pt + 1
         else:
             cur_job = hq.heappop(heap)
             end_time = time + cur_job[0]
