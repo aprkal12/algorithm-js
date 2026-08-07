@@ -3,36 +3,24 @@ import heapq as hq
 def solution(jobs):
     answer = 0
     heap = []
-    time = 0
-    
+    time = 0 
     times = []
-    start_job = 0
+    pop_list = []
 
-    job = jobs.pop(0)
-    [job[0], job[1]] = [job[1], job[0]]
-    hq.heappush(heap, jobs.pop(0))
-    job = hq.heappop(heap)
-
-    # 풀이 설계
-    # 1. 일단 job들은 우선순위 규칙에 따라 소요시간이 짧은 순으로 heap에 저장 (같은 시간 작업에 대한 후순위 처리 고려해야함)
-    # 2. 먼저 전부 힙에 넣을지? (우선 순위 규칙이 있어서 잡들 먼저 넣어도 될 것 같음) 아니면 처음 구현하던대로 count를 ms로 각 ms마다의 작업을 할지? <- 오답 추정
-    # 3. 한 타임에 여러 job이 오면? 그래서 먼저 job들에 대한 힙을 완성해야할듯
-
-    # while job is not None or len(heap) > 0:
-    #     if len(jobs) > 0 and jobs[0][0] == time:
-    #         next_job = jobs.pop(0)
-    #         [next_job[0], next_job[1]] = [job[1], job[0]]
-    #         hq.heappush(heap, next_job)
-    #     if not job and len(heap) > 0:
-    #         job = hq.heappop(heap)
-    #         start_job = time
-    #     if time == start_job + job[1]:
-    #         times.append(start_job + job[1] - job[0])
-    #         job = None
-    #     time+=1
-
-    # print(times)
-    # answer = sum(times) / len(times)
+    while len(jobs) > len(pop_list) or len(heap) > 0:
+        for i in range(len(jobs)):
+            if jobs[i][0] <= time and not i in pop_list:
+                [jobs[i][0], jobs[i][1]] = [jobs[i][1], jobs[i][0]]
+                hq.heappush(heap, jobs[i])
+                pop_list.append(i)
+        if len(heap) < 1:
+            time += 1
+        else:
+            cur_job = hq.heappop(heap)
+            end_time = time + cur_job[0]
+            times.append(end_time - cur_job[1])
+            time = end_time
+    answer = int(sum(times) / len(times))
             
     return answer
 
@@ -45,6 +33,18 @@ def solution(jobs):
 jobs_list = []
 
 jobs_list.append([[0, 3], [1, 9], [3, 5]])
+jobs_list.append([[0, 3], [1, 9], [2, 6]])
+jobs_list.append([[2, 6], [0, 3], [1, 9]])
+jobs_list.append([[0, 5], [0, 1], [0, 2]])
+jobs_list.append([[0, 4], [10, 2]])
+jobs_list.append([[0, 7]])
+jobs_list.append([[5, 3], [6, 2]])
+jobs_list.append([[0, 3], [10, 2], [20, 4]])
+jobs_list.append([[0, 10], [1, 1], [1, 2], [1, 3]])
+jobs_list.append([[0, 3], [0, 3]])
+jobs_list.append([[3, 2], [3, 4], [10, 1]])
+jobs_list.append([[0, 1], [100, 1]])
+jobs_list.append([[1, 5], [2, 3], [100, 2]])
 
 for jobs in jobs_list:
     print(solution(jobs))
